@@ -1,0 +1,31 @@
+2、安装
+
+将zip文件里的目录解压，然后右击目录，在终端打开。
+
+以下按步骤做，#后面是我的说明
+
+sudo su #进入root权限
+make clean #清理make编译的可能残留
+make #编译驱动，这是最重要的一步
+modprobe lib80211
+modprobe cfg80211
+insmod 8192eu.ko
+cp 8192eu.ko /lib/modules/`uname -r`/kernel/drivers/net/wireless
+depmod -a #与编译驱动相关的事宜到此完结
+modprobe 8192eu #加载驱动
+lsmod #查看是否有8192eu 驱动模块
+echo 8192eu >> /etc/modules 将驱动添加到开机启动列表
+
+重启电脑，完成。
+
+3、安装中遇到的错误
+
+在make过程中报错：
+Makefile:976: “Cannot use CONFIG_STACK_VALIDATION=y, please install libelf-dev, libelf-devel or elfutils-libelf-devel”
+make[1]: *** 没有规则可制作目标“U6/RTL8192EU”。 停止。
+
+这是说缺少libelf软件，那就安装：
+
+sudo apt install libelf-dev
+
+然后重新编译一遍。
